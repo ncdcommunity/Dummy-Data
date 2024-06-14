@@ -1,0 +1,61 @@
+[
+    {
+        "id": "e145937664bd41ef",
+        "type": "inject",
+        "z": "d03667228cb08896",
+        "name": "4 - Thermocouple",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "{\"nodeId\":0,\"firmware\":0,\"battery\":\"3.23\",\"battery_percent\":\"92.78\",\"counter\":1,\"sensor_type\":4,\"sensor_data\":{\"temperature\":0},\"sensor_name\":\"Thermocouple\",\"type\":\"sensor_data\",\"addr\":\"00:00:00:01:a2:b3:c4:f5\",\"received\":1708011488930,\"original\":{\"mac\":\"00:00:00:01:a2:b3:c4:f5\",\"receive_options\":{\"ack\":1,\"broadcast\":1,\"type\":\"DigiMesh\"},\"data\":[0,0,0,0,0,0,0,0],\"type\":\"receive_packet\"},\"modem_mac\":\"00:13:A2:00:41:A1:B2:C3\"}",
+                "vt": "json"
+            },
+            {
+                "p": "payload"
+            },
+            {
+                "p": "data.received",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "topic": "sensor_data",
+        "payload": "{\"temperature\":0}",
+        "payloadType": "json",
+        "x": 340,
+        "y": 1400,
+        "wires": [
+            [
+                "08028904ef81bbcc"
+            ]
+        ],
+        "icon": "node-red/serial.svg"
+    },
+    {
+        "id": "08028904ef81bbcc",
+        "type": "function",
+        "z": "d03667228cb08896",
+        "name": "random",
+        "func": "let count = context.get(\"counter\") || 1;\n\nlet max_batt = 3.2;\nlet min_batt = 3.1;\nlet max_temp_c = 750;\nlet min_temp_c = -65;\n\nlet temp = Number(((Math.random() * (max_temp_c- min_temp_c) + min_temp_c).toFixed(2)));\n\nmsg.payload.temperature = temp;\nmsg.data.sensor_data.temperature = temp;\nmsg.data.battery = ((Math.random() * (max_batt - min_batt) + min_batt).toFixed(2)).toString();\nmsg.data.battery_percent = ((msg.data.battery * 100 / 3.3).toFixed(2)).toString();\nmsg.data.counter = count++;\n\ncontext.set(\"counter\", count);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 1400,
+        "wires": [
+            []
+        ],
+        "icon": "font-awesome/fa-random"
+    }
+]
